@@ -1,0 +1,113 @@
+<section id="how" class="section container">
+  <div class="section-head">
+    <span class="kicker" appReveal="pop">{{ t().how.kicker }}</span>
+    <h2 class="title" appReveal>{{ t().how.title }}</h2>
+    <p class="lead" appReveal [revealDelay]="100">{{ t().how.intro }}</p>
+  </div>
+
+  <ol class="steps">
+    @for (step of t().how.steps; track $index) {
+      <li class="step card" appReveal="up" [revealDelay]="$index * 150">
+        <div class="num">{{ $index + 1 }}</div>
+        <div class="emoji">{{ icons[$index] }}</div>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.text }}</p>
+        @if (!$last) {
+          <span class="arrow" aria-hidden="true">➜</span>
+        }
+      </li>
+    }
+  </ol>
+
+  <!-- ===== Simulator ===== -->
+  <div class="sim card" appReveal="tilt">
+    <div class="sim-head">
+      <h3>📊 {{ t().how.simTitle }}</h3>
+      <p>{{ t().how.simDesc }}</p>
+    </div>
+
+    <div class="sim-body">
+      <div class="controls">
+        <label>
+          <span>{{ t().how.simCurveLabel }} <b>{{ num(curveSol(), 1) }} SOL</b></span>
+          <input type="range" min="0" [max]="max" step="0.5" [value]="curveSol()" (input)="setNum('curve', $event)" />
+        </label>
+        <label>
+          <span>{{ t().how.simBuyLabel }} <b>{{ num(buySol(), 2) }} SOL</b></span>
+          <input type="range" min="0.05" max="20" step="0.05" [value]="buySol()" (input)="setNum('buy', $event)" />
+        </label>
+        <label class="usd">
+          <span>{{ t().how.simSolUsd }}</span>
+          <input type="number" min="1" step="1" [value]="solUsd()" (input)="setNum('usd', $event)" />
+        </label>
+
+        <div class="progress">
+          <div class="progress-label">
+            <span>{{ t().how.simProgress }}</span><b>{{ num(sim().progress, 1) }}%</b>
+          </div>
+          <div class="track">
+            <div class="fill" [style.width.%]="sim().progress"></div>
+            <span class="cap">🎓</span>
+          </div>
+        </div>
+        @if (sim().graduated) {
+          <div class="graduated">{{ t().how.simGraduated }}</div>
+        }
+      </div>
+
+      <div class="chart">
+        <svg [attr.viewBox]="'0 0 ' + W + ' ' + H" role="img" [attr.aria-label]="t().how.simTitle">
+          <defs>
+            <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ff8a1f" stop-opacity=".45" />
+              <stop offset="1" stop-color="#ff8a1f" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+          @for (g of [0.25, 0.5, 0.75]; track g) {
+            <line class="grid" x1="20" [attr.x2]="W - 20" [attr.y1]="20 + (H - 40) * g" [attr.y2]="20 + (H - 40) * g" />
+          }
+          <path [attr.d]="areaPath" fill="url(#area)" />
+          <path [attr.d]="buyArea()" class="buy-area" />
+          <path [attr.d]="curvePath" class="curve" />
+          <line class="axis" x1="20" [attr.y1]="H - 20" [attr.x2]="W - 20" [attr.y2]="H - 20" />
+          <line class="axis" x1="20" y1="20" x2="20" [attr.y2]="H - 20" />
+          <line class="guide" [attr.x1]="marker().x" [attr.x2]="marker().x" [attr.y1]="marker().y" [attr.y2]="H - 20" />
+          <g [attr.transform]="'translate(' + marker().x + ' ' + marker().y + ')'">
+            <circle r="11" class="dot" />
+            <text class="dot-bang" y="-20" text-anchor="middle">!</text>
+          </g>
+          <text class="label" [attr.x]="W - 20" [attr.y]="H - 4" text-anchor="end">{{ t().how.simAxisX }} →</text>
+          <text class="label" x="28" y="16">↑ {{ t().how.simAxisY }}</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="results">
+      <div class="res">
+        <span>{{ t().how.simTokensSold }}</span>
+        <b>{{ num(sim().sold / 1e6, 1) }}M</b>
+      </div>
+      <div class="res">
+        <span>{{ t().how.simPrice }}</span>
+        <b>{{ small(sim().price) }} SOL</b>
+        <small>≈ {{ usd(sim().price * solUsd()) }}</small>
+      </div>
+      <div class="res">
+        <span>{{ t().how.simMcap }}</span>
+        <b>{{ num(sim().mcapSol, 0) }} SOL</b>
+        <small>≈ {{ usd(sim().mcapSol * solUsd()) }}</small>
+      </div>
+      <div class="res hot">
+        <span>{{ t().how.simYouGet }}</span>
+        <b>{{ num(sim().tokens, 0) }} $!</b>
+        <small>{{ t().how.simAvgPrice }}: {{ small(sim().avg) }} SOL</small>
+      </div>
+      <div class="res">
+        <span>{{ t().how.simImpact }}</span>
+        <b>+{{ num(sim().impact, 2) }}%</b>
+      </div>
+    </div>
+
+    <p class="note">ℹ️ {{ t().how.simNote }}</p>
+  </div>
+</section>
