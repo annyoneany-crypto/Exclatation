@@ -6,12 +6,12 @@ export const TOKEN = {
   name: 'Excalation',
   ticker: '$!',
   /** Paste the Solana mint address here after launching on pump.fun */
-  contractAddress: '',
+  contractAddress: 'H92ZmyQrqwrxL7CM7h6tktYbaxYnhiBFhpMCE24upump',
   totalSupply: 1_000_000_000,
   decimals: 6,
   links: {
-    pumpfun: 'https://pump.fun',
-    x: '',
+    pumpfun: 'https://pump.fun/coin/H92ZmyQrqwrxL7CM7h6tktYbaxYnhiBFhpMCE24upump',
+    x: 'https://x.com/Excalationsol',
     telegram: '',
     dexscreener: '',
   },
